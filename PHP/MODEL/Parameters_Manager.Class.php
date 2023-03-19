@@ -32,4 +32,12 @@ class Parameters_Manager
 	{
 		return DAO::createTable($obj);
 	}
+	public static function dropTable($obj)
+	{
+		return DAO::dropTable($obj);
+	}
+	public static function getInfo($obj)
+	{
+		return DAO::getInfo($obj);
+	}
 }

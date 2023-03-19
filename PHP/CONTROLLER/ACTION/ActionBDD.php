@@ -1,6 +1,7 @@
 <?php 
 //création parameter pour init la connection
 $param = new Parameters($_POST);
+$_SESSION['parameters'] = $_POST;
 $co = DBConnect::Connect();
 
 //création + remplissage table 'parameters' dans la bdd
@@ -26,4 +27,5 @@ foreach ($tables as $row) {
 
     // $table_name = $tables[0]['Tables_in_' . $test->getNomBDD()];
 
-    // header('Location: index.php?page=tables');
+//redirection sur liste tables pour leur gestion
+header('Location: index.php?page=tables');

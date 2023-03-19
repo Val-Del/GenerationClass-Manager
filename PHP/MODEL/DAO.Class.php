@@ -37,20 +37,27 @@ class DAO
 		$requ = substr($requ, 0,-2);
 		$requ .= ') VALUES (';
 		foreach ($attributs as $attribut => $value) {
-			// var_dump($attribut);
 			if ($attribut != '_attributes') {
+				$attributGet = ucfirst(ltrim($attribut, '_'));
+				$method = 'get' . $attributGet;
+				
+				if (is_callable([$obj, $method])) {
+					$result = $obj->$method();
+				} elseif (is_callable([$obj, 'get'.$attributGet])) {
+					$result = $obj->{'get'.$attributGet}();
+				} elseif (method_exists($obj, 'get'.$attributGet)) {
 
-				$attributGet = substr($attribut,1);
-			    $attributGet = ucfirst($attributGet);
-			    $get = array($class, 'get'.$attributGet);
-			    $result = call_user_func($get);
+					$result = $obj->{'get'.$attributGet}();
+				} else {
+					var_dump('null');
+				}
+				
 				$requ .= "'$result',";
-			   
 			}
 		}
 		$requ = substr($requ, 0,-2);
 		$requ .= '\')';
-			var_dump($requ);
+			// var_dump($requ);
 		$q = $db->prepare($requ);
 		return $q->execute();
 	}
@@ -120,8 +127,12 @@ class DAO
 	 */
 	public static function select(array $nomColonnes, string $table, array $conditions = null, string $orderBy = null, string $limit = null, bool $api = false, bool $debug = false)
 	{
+		var_dump($nomColonnes);
 		$db = DbConnect::getDb();
-
+		// var_dump($db);
+		// if (is_null($nomColonnes)) {
+		// 	// $nomColonnes = '*';
+		// }
 		$string = json_encode($nomColonnes) . $table . json_encode($conditions) . $orderBy . $limit . $api . $debug;
 		if (strpos($string, ";")) {
 			return false;
@@ -141,6 +152,11 @@ class DAO
 				$limit = " LIMIT " . $limit;
 			}
 
+// 			echo "Cols: $cols<br>";
+// echo "Table: $t<br>";
+// echo "Conditions: $conditions<br>";
+// echo "OrderBy: $orderBy<br>";
+// echo "Limit: $limit<br>";
 			$q = $db->query($cols . $t . $conditions . $orderBy . $limit);
 			if ($debug) // Si le debug est a true on affiche la requete qui est envoyée en base de données
 			{
@@ -172,9 +188,14 @@ class DAO
 	 */
 	private static function elementSelect($tab)
 	{
+		// var_dump($tab);
 		$temp = "SELECT ";
 		foreach ($tab as $uneCol) {
-			$temp .= $uneCol . ", ";
+			if (!is_array($uneCol)) {
+				$temp .= $uneCol . ", ";
+			}
+			
+			
 		}
 		return substr($temp, 0, strlen($temp) - 2);
 	}
@@ -210,9 +231,9 @@ class DAO
 {
     $db = DbConnect::getDb();
     $class = get_class($obj);
-    var_dump($class);
+    // var_dump($class);
     $attributs = $class::getAttributes();
-    var_dump($attributs);
+    // var_dump($attributs);
     $tableName = $class;
     $primaryKey = 'id_'. $class;
     $query = "CREATE TABLE `$tableName` (`";
@@ -263,4 +284,45 @@ public static function dropTable($obj)
     $query = "DROP TABLE IF EXISTS `$tableName`;";
     return $db->exec($query);
 }
+public static function getInfo($obj)
+{
+    $db = DbConnect::getDb();
+	$sql = "SHOW TABLES FROM ".$obj->getNomBDD()."";
+	$q = $db->prepare($sql);
+	$q->execute();
+	return $q->fetchAll(PDO::FETCH_ASSOC);
+}
+public static function selectAll($tableName) {
+	$db = DbConnect::getDb();
+  
+	// Build the SQL query
+	$query = "SELECT * FROM $tableName";
+  
+	// Execute the query
+	$result = $db->query($query);
+  
+	// Check if the query was successful
+	if (!$result) {
+	  return false;
+	}
+  
+	// Fetch all rows from the result set
+	$rows = $result->fetchAll(PDO::FETCH_ASSOC);
+  
+	// If there are no rows, return an empty array
+	if (!$rows) {
+	  return [];
+	}
+  
+	// Create an array of objects representing the rows
+	$objects = [];
+	foreach ($rows as $row) {
+		var_dump($row);
+	  $object = new Tables($row);
+	  $objects[] = $object;
+	}
+  
+	return $objects;
+  }
+  
 }

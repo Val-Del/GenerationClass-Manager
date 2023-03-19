@@ -9,6 +9,9 @@
     }
     public static function Connect()
     {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         $servername = Parameters::getServername();
         $username = Parameters::getUserBdd();
         $password = Parameters::getPassBdd();
@@ -25,10 +28,10 @@
             return -1;
         }
     }
-    public static function request($sql){
-        $db=self::getDb();
-        $q = $db->prepare($sql);
-       $q->execute();
-       return $q->fetchAll(PDO::FETCH_ASSOC);
-    }
+    // public static function request($sql){
+    //     $db=self::getDb();
+    //     $q = $db->prepare($sql);
+    //    $q->execute();
+    //    return $q->fetchAll(PDO::FETCH_ASSOC);
+    // }
 }
