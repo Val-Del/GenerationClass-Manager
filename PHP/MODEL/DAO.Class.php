@@ -215,7 +215,7 @@ class DAO
     var_dump($attributs);
     $tableName = $class;
     $primaryKey = 'id_'. $class;
-    $query = "CREATE TABLE IF NOT EXISTS `$tableName` (`";
+    $query = "CREATE TABLE `$tableName` (`";
 	$query .= $primaryKey.'` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,';
     // var_dump(Parameters::getProjectName());
     foreach ($attributs as $attribut => $value) {
@@ -255,5 +255,12 @@ class DAO
 	// var_dump($query);
     return $db->exec($query);
 }
-
+public static function dropTable($obj)
+{
+    $db = DbConnect::getDb();
+    $class = get_class($obj);
+    $tableName = $class;
+    $query = "DROP TABLE IF EXISTS `$tableName`;";
+    return $db->exec($query);
+}
 }
