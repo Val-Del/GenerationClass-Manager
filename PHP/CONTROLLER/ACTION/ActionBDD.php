@@ -1,36 +1,29 @@
 <?php 
-$test = new Parameters($_POST);
-DBConnect::Connect();
-Parameters_Manager::createTable($test);
-Parameters_Manager::add($test);
-// var_dump(Parameters::getAttributes());
-// var_dump($test->getServername());
-// var_dump($test->getUserBdd());
-// var_dump($test->getPortBdd());
-// var_dump($test->getNomBdd());
-// var_dump($test->getProjectName());
-// $co = DBConnect::Connect();
-// if ($co != -1) {
-//     $sql = "SHOW TABLES FROM ".$test->getNomBDD()."";
-//     $tables = DBConnect::request($sql);
-//    // var_dump($tables);
+//création parameter pour init la connection
+$param = new Parameters($_POST);
+$co = DBConnect::Connect();
 
-//     foreach ($tables as $row) {
-//         $table_names[] = $row['Tables_in_' . $test->getNomBDD()];
-//          var_dump($row['Tables_in_' . $test->getNomBDD()]);
-//     }
+//création + remplissage table 'parameters' dans la bdd
+Parameters_Manager::dropTable($param);
+Parameters_Manager::createTable($param);
+Parameters_Manager::add($param);
+
+//création + remplissage table 'tables' dans la bdd
+$tables = Parameters_Manager::getInfo($param);
+$table = new Tables();
+Tables_Manager::dropTable($table);
+Tables_Manager::createTable($table);
+foreach ($tables as $row) {
+    $row = $row['Tables_in_' . $param->getNomBDD()];
+    $row = ['name' => $row];
+    $tab = new Tables($row);
+    Tables_Manager::add($tab);
+}
+
+
     // createBaseFiles();
 
 
-    // var_dump($table_names);
     // $table_name = $tables[0]['Tables_in_' . $test->getNomBDD()];
-    // var_dump($table_name);
-    
-    // var_dump($tables);
-    // foreach ($tables as $table) {
-    //     $req = "SHOW columns FROM $table";
-    //     var_dump($req);
-    //     $columns = DBConnect::request($req);
-    //     var_dump($columns);
-    // }
 
+    // header('Location: index.php?page=tables');
