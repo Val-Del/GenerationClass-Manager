@@ -1,7 +1,7 @@
 <?php
 
-$param = new Parameters($_SESSION['parameters']);
-$co = DBConnect::Connect();
+// $param = new Parameters($_SESSION['parameters']);
+// $co = DBConnect::Connect();
 
 // $parameters = Parameters_Manager::getList();
 // var_dump($parameters);
