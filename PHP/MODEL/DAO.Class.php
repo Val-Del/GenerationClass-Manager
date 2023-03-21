@@ -49,6 +49,7 @@ class DAO
 
 					$result = $obj->{'get'.$attributGet}();
 				} else {
+					var_dump($obj, $method);
 					var_dump('null');
 				}
 				
@@ -235,17 +236,22 @@ class DAO
     $attributs = $class::getAttributes();
     // var_dump($attributs);
     $tableName = $class;
-    $primaryKey = 'id_'. $class;
     $query = "CREATE TABLE `$tableName` (`";
-	$query .= $primaryKey.'` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,';
     // var_dump(Parameters::getProjectName());
+	$count = 0;
     foreach ($attributs as $attribut => $value) {
         // var_dump($attribut);
-        if ($attribut != '_attributes') {
+		if ($count == 0) {		
+			$query .= $attribut.'` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,';
+			$count++;
+		}else {
+			if ($attribut != '_attributes') {
 
             $query .= "`$attribut` VARCHAR(255),";
            
         }
+		}
+        
 		// $attributGet = substr($attribut,1);
         //     $attributGet = ucfirst($attributGet);
         //     $get = array($class, 'get'.$attributGet);
@@ -271,7 +277,7 @@ class DAO
 			
 			
 		// }
-		// var_dump($query);
+		var_dump($query);
 
 	// var_dump($query);
     return $db->exec($query);

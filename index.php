@@ -1,7 +1,12 @@
 <?php
 session_start();
+
 include "./PHP/CONTROLLER/Outils.php";
 spl_autoload_register("ChargerClasse");
+if (isset($_SESSION['parameters'])) {
+  $param = new Parameters($_SESSION['parameters']);
+  $co = DBConnect::Connect();
+}
 // var_dump($_GET);
 // var_dump($_POST);
 if (isset($_GET['page'])) {

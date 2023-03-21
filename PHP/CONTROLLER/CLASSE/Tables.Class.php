@@ -2,6 +2,7 @@
 {
 
     /*****************Attributs***************** */
+    private $_id_table;
     private $_name;
     private $_foreign_key;
     private $_url;
@@ -118,4 +119,24 @@
         self::$_attributes = get_class_vars(static::class);
         return self::$_attributes;
     }  
+
+    /**
+     * Get the value of _id_table
+     */ 
+    public function getId_table()
+    {
+        return $this->_id_table;
+    }
+
+    /**
+     * Set the value of _id_table
+     *
+     * @return  self
+     */ 
+    public function setId_table($_id_table)
+    {
+        $this->_id_table = $_id_table;
+
+        return $this;
+    }
 }

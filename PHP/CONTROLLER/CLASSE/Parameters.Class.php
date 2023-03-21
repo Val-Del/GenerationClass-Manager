@@ -2,13 +2,14 @@
 {
 
     /*****************Attributs***************** */
+    private static $_idParameter;
     private static $_projectName;
     private static $_userBdd;
     private static $_passBdd;
     private static $_portBdd;
     private static $_nomBdd;
     private static $_pathFramework;
-    private static $_servername;
+    private static $_serverName;
     private static $_attributes = [];
 
     /*****************Accesseurs***************** */
@@ -102,7 +103,7 @@
      */ 
     public static function getServername()
     {
-        return self::$_servername;
+        return self::$_serverName;
     }
 
 
@@ -178,7 +179,7 @@
      */ 
     public static function setServername($_servername)
     {
-        self::$_servername = $_servername;
+        self::$_serverName = $_servername;
     }
 
     /**
@@ -188,4 +189,22 @@
     {
         return self::$_attributes;
     }  
+
+    /**
+     * Get the value of _id_parameter
+     */ 
+    public function getIdParameter()
+    {
+        return self::$_idParameter;
+    }
+
+    /**
+     * Set the value of _id_parameter
+     *
+     * @return  self
+     */ 
+    public function setIdParameter($_id_parameter)
+    {
+        self::$_idParameter;
+    }
 }
