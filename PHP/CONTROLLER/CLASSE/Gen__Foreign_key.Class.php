@@ -1,4 +1,4 @@
-<?php class Foreign_key
+<?php class Gen__Foreign_key
 {
 
     /*****************Attributs***************** */

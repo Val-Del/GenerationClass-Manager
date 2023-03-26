@@ -3,29 +3,29 @@
 class Parameters_Manager
 {
 
-	public static function add(Parameters $obj)
+	public static function add(Gen__Parameters $obj)
 	{
 		return DAO::add($obj);
 	}
 
-	public static function update(Parameters $obj)
+	public static function update(Gen__Parameters $obj)
 	{
 		return DAO::update($obj);
 	}
 
-	public static function delete(Parameters $obj)
+	public static function delete(Gen__Parameters $obj)
 	{
 		return DAO::delete($obj);
 	}
 
 	public static function findById($id)
 	{
-		return DAO::select(Parameters::getAttributes(), "Parameters", ["IdPanier" => $id])[0];
+		return DAO::select(Gen__Parameters::getAttributes(), "Parameters", ["IdPanier" => $id])[0];
 	}
 
 	public static function getList(array $nomColonnes = null,  array $conditions = null, string $orderBy = null, string $limit = null, bool $api = false, bool $debug = false)
 	{
-		$nomColonnes = ($nomColonnes == null) ? Parameters::getAttributes() : $nomColonnes;
+		$nomColonnes = ($nomColonnes == null) ? Gen__Parameters::getAttributes() : $nomColonnes;
 		return DAO::select($nomColonnes, "Parameters",   $conditions,  $orderBy,  $limit,  $api,  $debug);
 	}
 	public static function createTable($obj)

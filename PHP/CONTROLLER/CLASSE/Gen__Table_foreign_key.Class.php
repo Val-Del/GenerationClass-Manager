@@ -1,4 +1,4 @@
-<?php class Table_foreign_key
+<?php class Gen__Table_foreign_key
 {
 
     /*****************Attributs***************** */

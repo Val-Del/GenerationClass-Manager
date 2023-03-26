@@ -4,7 +4,7 @@ session_start();
 include "./PHP/CONTROLLER/Outils.php";
 spl_autoload_register("ChargerClasse");
 if (isset($_SESSION['parameters'])) {
-  $param = new Parameters($_SESSION['parameters']);
+  $param = new Gen__Parameters($_SESSION['parameters']);
   $co = DBConnect::Connect();
 }
 include './PHP/VIEW/header.php';

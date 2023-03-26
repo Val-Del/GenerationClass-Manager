@@ -29,7 +29,13 @@ function deleteDirectory($dir)
 	}
 	rmdir($dir);
 }
-
+function createGestion($obj)
+{
+	global $pathGestion;
+	$name = $pathGestion . '/gestion_' . $obj->getName() . '.php';
+	// var_dump($name);
+	$gestion = fopen($name, 'w');
+}
 function createManager($obj)
 {
 	global $pathManager;
@@ -141,7 +147,7 @@ class ' . ucfirst($obj->getName()) . '
     }
 
 }';
-	var_dump($content);
+	// var_dump($content);
 	global $pathClass;
 	$name = $pathClass . '/' . ucfirst($obj->getName()) . '.Class.php';
 	$classFile = fopen($name, 'a');

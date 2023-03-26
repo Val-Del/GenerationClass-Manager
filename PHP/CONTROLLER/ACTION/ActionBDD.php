@@ -1,7 +1,7 @@
 <?php 
 //création parameter pour init la connection
 // var_dump($_POST);
-$param = new Parameters($_POST);
+$param = new Gen__Parameters($_POST);
 $_SESSION['parameters'] = $_POST;
 $co = DBConnect::Connect();
 
@@ -13,15 +13,15 @@ Parameters_Manager::add($param);
 //création + remplissage table 'tables' dans la bdd
 $tables = Parameters_Manager::getInfo($param);
 $primary_keys = Parameters_Manager::getPrimaryKeys($tables, $param->getNomBDD());
-var_dump($primary_keys);
-$table = new Tables();
+// var_dump($primary_keys);
+$table = new Gen__Tables();
 Tables_Manager::dropTable($table);
 Tables_Manager::createTable($table);
 // var_dump($tables);
 
 foreach ($tables as $row) {
     $table_name = $row['Tables_in_' . $param->getNomBDD()];
-    $table = new Tables(['name' => $table_name]);
+    $table = new Gen__Tables(['name' => $table_name]);
     // var_dump($table_name);
     if (array_key_exists($table_name, $primary_keys)) {
         $primary_key_array = $primary_keys[$table_name];
@@ -37,11 +37,11 @@ foreach ($tables as $row) {
 }
 
 
-$tablefk = new Table_foreign_key();
+$tablefk = new Gen__Table_foreign_key();
 Table_foreign_key_Manager::dropTable($tablefk);
 Table_foreign_key_Manager::createTable($tablefk);
 
-$fk = new Foreign_key();
+$fk = new Gen__Foreign_key();
 Foreign_key_Manager::dropTable($fk);
 Foreign_key_Manager::createTable($fk);
     // createBaseFiles();

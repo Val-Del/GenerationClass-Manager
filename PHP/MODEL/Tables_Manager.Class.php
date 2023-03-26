@@ -3,17 +3,17 @@
 class Tables_Manager
 {
 
-	public static function add(Tables $obj)
+	public static function add(Gen__Tables $obj)
 	{
 		return DAO::add($obj);
 	}
 
-	public static function update(Tables $obj)
+	public static function update(Gen__Tables $obj)
 	{
 		return DAO::update($obj);
 	}
 
-	public static function delete(Tables $obj)
+	public static function delete(Gen__Tables $obj)
 	{
 		return DAO::delete($obj);
 	}
@@ -26,7 +26,7 @@ class Tables_Manager
 	public static function getList(array $nomColonnes = null,  array $conditions = null, string $orderBy = null, string $limit = null, bool $api = false, bool $debug = false)
 	{
         // var_dump(Tables::getAttributes());
-		$nomColonnes = ($nomColonnes == null) ? Tables::getAttributes() : $nomColonnes;
+		$nomColonnes = ($nomColonnes == null) ? Gen__Tables::getAttributes() : $nomColonnes;
 		return DAO::select($nomColonnes, "Tables",   $conditions,  $orderBy,  $limit,  $api,  $debug);
 	}
 	public static function createTable($obj)
@@ -43,6 +43,6 @@ class Tables_Manager
 	}
     public static function selectAll()
 	{
-		return DAO::selectAll('Tables');
+		return DAO::selectAll('Gen__Tables');
 	}
 }

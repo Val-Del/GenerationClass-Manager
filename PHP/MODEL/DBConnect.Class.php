@@ -12,10 +12,10 @@
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        $servername = Parameters::getServername();
-        $username = Parameters::getUserBdd();
-        $password = Parameters::getPassBdd();
-        $db = Parameters::getNomBdd();
+        $servername = Gen__Parameters::getServername();
+        $username = Gen__Parameters::getUserBdd();
+        $password = Gen__Parameters::getPassBdd();
+        $db = Gen__Parameters::getNomBdd();
         $charset = '';
 
         try {

@@ -1,4 +1,4 @@
-<?php class Tables
+<?php class Gen__Tables
 {
 
     /*****************Attributs***************** */

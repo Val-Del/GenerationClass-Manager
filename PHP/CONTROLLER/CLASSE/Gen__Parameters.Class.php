@@ -1,4 +1,4 @@
-<?php class Parameters
+<?php class Gen__Parameters
 {
 
     /*****************Attributs***************** */

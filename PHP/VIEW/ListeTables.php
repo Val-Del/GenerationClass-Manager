@@ -1,46 +1,33 @@
 <?php
-
-// $param = new Parameters($_SESSION['parameters']);
-// $co = DBConnect::Connect();
-
-// $parameters = Parameters_Manager::getList();
-// var_dump($parameters);
-// $param = new Parameters();
-// $co = DBConnect::Connect();
-
-// Parameters::getPassBdd();
-// Parameters::getNomBdd();
-// var_dump(Parameters::getServername());
 $tables = Tables_Manager::selectAll();
 // var_dump($tables);
+// var_dump($tables);
 echo '<form method=POST action="?page=creationFiles">';
-echo '<h1>Tables :</h1>
-<ul class="table-list">';
-echo '<li class=flex>';
-echo '<label></label>';
-echo '<input type="checkbox" class=none>';
-echo '</li>';
+echo'
+<div class="grid-container ">
+<div class="grid-item header-item">Table name</div>
+<div class="grid-item header-item">Class/ Manager</div>
+<div class="grid-item header-item">Back office</div>';
+
 foreach ($tables as $table) {
-     if ($table->getName() != "tables" && $table->getName() != "parameters" && $table->getName() != "foreign_key"  && $table->getName() != "table_foreign_key") {
-          echo '<li class=flex>';
-          echo '<label>' . ucFirst($table->getName()) . '</label>';
-          echo '<input type="checkbox" name="'.$table->getId_table().'">';
-          echo '</li>';
+     // if ($table->getName() != "gen__tables" && $table->getName() != "gen__parameters" && $table->getName() != "gen__foreign_key"  && $table->getName() != "gen__table_foreign_key") {
+     if (substr($table->getName(), 0, 5 ) != "gen__") {
+          echo '<div class="grid-item">';
+          echo  ucFirst($table->getName()) ;
+          echo '</div>';
+
+          echo '<div class="grid-item">';
+          echo '<input type="checkbox" name="'.$table->getId_table().'[_generation]">';
+          echo '</div>';
+
+          echo '<div class="grid-item">';
+          echo '<input type="checkbox" name="'.$table->getId_table().'[_back]">';
+          echo '</div>';
      }
-
-
-     // echo'<li>';
-     // echo($table->getForeign_key()) ;
-     // echo'</li>';
-
-     // echo'<li>';
-     // echo($table->getUrl()) ;
-     // echo'</li>';
-
-     // echo'<li>';
-     // echo($table->getBack()) ;
-     // echo'</li>';
 }
-echo '</ul>';
-echo '<br><button type=submit>Génération</button>';
+  
+echo'</div>';
+
+  
+echo '<br><button class=btn type=submit>Génération</button>';
 echo '</form>';

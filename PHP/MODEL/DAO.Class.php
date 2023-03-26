@@ -407,7 +407,7 @@ public static function selectAll($tableName) {
 			}
 			$newRow[$key] = $value;
 		}
-		$object = new Tables($newRow);
+		$object = new Gen__Tables($newRow);
 		$objects[] = $object;
 	}
   
