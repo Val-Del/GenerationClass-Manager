@@ -7,6 +7,10 @@
     private $_foreign_key;
     private $_url;
     private $_back;
+    private $_generation;
+    
+    private $_nom_id;
+    private $_primary_key;
     private static $_attributes = [];
 
     /*****************Accesseurs***************** */
@@ -136,6 +140,66 @@
     public function setId_table($_id_table)
     {
         $this->_id_table = $_id_table;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of _id_table
+     */ 
+    public function getGeneration()
+    {
+        return $this->_generation;
+    }
+
+    /**
+     * Set the value of _id_table
+     *
+     * @return  self
+     */ 
+    public function setGeneration($_id_table)
+    {
+        $this->_generation = $_id_table;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of _nom_id
+     */ 
+    public function getNom_id()
+    {
+        return $this->_nom_id;
+    }
+
+    /**
+     * Set the value of _nom_id
+     *
+     * @return  self
+     */ 
+    public function setNom_id($_nom_id)
+    {
+        $this->_nom_id = $_nom_id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of _primary_key
+     */ 
+    public function getPrimary_key()
+    {
+        return $this->_primary_key;
+    }
+
+    /**
+     * Set the value of _primary_key
+     *
+     * @return  self
+     */ 
+    public function setPrimary_key($_primary_key)
+    {
+        $this->_primary_key = $_primary_key;
 
         return $this;
     }

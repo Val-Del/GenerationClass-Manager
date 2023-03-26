@@ -40,4 +40,7 @@ class Parameters_Manager
 	{
 		return DAO::getInfo($obj);
 	}
+	public static function getPrimaryKeys($tables,$name){
+		return DAO::getPrimaryKeys($tables,$name);
+	}
 }

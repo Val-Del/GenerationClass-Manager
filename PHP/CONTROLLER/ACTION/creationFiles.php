@@ -1,35 +1,30 @@
 <?php
-function createBaseFiles()
-{
-  $nom = Parameters::getProjectName();
-  $dir = Parameters::getPathFramework();
-  $mk =  $dir . '\\' . $nom;
-  // var_dump($mk);
-  // mkdir($mk);
-  // $paths = ['/CSS', '/HTML', '/IMG', '/JS', '/SQL'];
-  $paths = [
-    '/CSS' => ['/MINIMIFY'=>['/csstest','/csstest3'=>['/csstest2']
-    ]
-  ],
-    '/HTML' => ['/test'],
-    '/IMG' => ['/test'], 
-    '/JS' => ['/test'],
-    '/SQL' => ['/test'],
-    '/teststring'=>['/zz']
-  ];
-  function echoSubpaths($path, $subpaths) {
-    foreach ($subpaths as $key => $subpath) {
-        if (is_array($subpath)) {
-            echoSubpaths($path . $key , $subpath);
-        } else {
-            echo $path . $subpath;
-            echo '<br>';
-        }
-    }
-}
+$nom = Parameters::getProjectName();
+$dir = Parameters::getPathFramework();
+$dir =  $dir . '/' . $nom;
 
-foreach ($paths as $path => $subpaths) {
-    echo $path . '<br>';
-    echoSubpaths($path , $subpaths); 
-}
+deleteDirectory($dir);
+
+
+//create files
+mkdir($dir);
+$pathManager = $dir . '/MANAGER';
+$pathClass = $dir . '/CLASS';
+mkdir($pathManager);
+mkdir($pathClass);
+
+$ts = Tables_Manager::selectAll();
+foreach ($ts as $key) {
+  foreach ($_POST as $kk => $vv) {
+    if ($kk == $key->getId_table()) {
+      $key->setGeneration('1');
+      Tables_Manager::update($key);
+      // var_dump($key);
+      createManager($key);
+      contentManager($key);
+      
+      createClass($key);
+      contentClass($key);
+    }
+  }
 }

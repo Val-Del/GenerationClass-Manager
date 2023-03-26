@@ -68,21 +68,68 @@ class DAO
 		$db = DbConnect::getDb();
 		$class = get_class($obj);
 		$colonnes = $class::getAttributes();
+		// var_dump($colonnes);
+		// var_dump($colonnes[0]);
+		
 		$requ = "UPDATE " . $class . " SET ";
-
-		for ($i = 1; $i < count($colonnes); $i++) {
-			$requ .= $colonnes[$i] . "=:" . $colonnes[$i] . ",";
+		
+		foreach ($colonnes as $key => $value) {
+			if ($key != '_attributes') {
+				$requ .= $key . "=:" . $key . ",";
+			}
+			// var_dump($value);
+			// var_dump($requ);
 		}
+		
+		// for ($i = 0; $i < count($colonnes); $i++) {
+		// 	// $requ .= $colonnes[$i] . "=:" . $colonnes[$i] . ",";
+		// 	var_dump($requ);
+		// }
 		$requ = substr($requ, 0, strlen($requ) - 1);
-		$requ .= " WHERE " . $colonnes[0] . "=:" . $colonnes[0];
-
+		// var_dump($requ);
+		$c = 0;
+		foreach ($colonnes as $key => $value) {
+			if ($c == 0) {
+				$requ .= " WHERE " . $key . "=:old" . $key;
+			}
+			$c++;
+		}
+		// $requ .= " WHERE " . $colonnes[0] . "=:" . $colonnes[0];
+// var_dump($requ);
 		$q = $db->prepare($requ);
 
-		for ($i = 0; $i < count($colonnes); $i++) {
-			$methode = "get" . ucfirst($colonnes[$i]);
-			$q->bindValue(":" . $colonnes[$i], $obj->$methode());
+		foreach ($colonnes as $key => $value) {
+			if ($key != '_attributes') {
+				$key = substr($key,1);
+			$method = "get".ucfirst($key);
+			// var_dump(":_" . $key, $obj->$method());
+		 	$q->bindValue(":_" . $key, $obj->$method());
+
+			}
+			
+				// $requ .= " WHERE " . $key . "=:" . $key;
+	
 		}
+		$c = 0;
+		foreach ($colonnes as $key => $value) {
+			if ($c == 0) {
+				
+				$key = substr($key,1);
+			$method = "get".ucfirst($key);
+			// var_dump(":old_" . $key, $obj->$method());
+		 	$q->bindValue(":old_" . $key, $obj->$method());
+			}
+			$c++;
+		}
+
+		// for ($i = 0; $i < count($colonnes); $i++) {
+		// 	$methode = "get" . ucfirst($colonnes[$i]);
+		// 	$q->bindValue(":" . $colonnes[$i], $obj->$methode());
+		// }
+		// var_dump()
+		// $q->debugDumpParams();
 		return $q->execute();
+		
 	}
 
 	public static function delete($obj)
@@ -126,9 +173,12 @@ class DAO
 	 *
 	 * @return [array ou object] $liste => résultat de la requête revoie false si la requête s'est mal passé sinon renvoie un tableau.
 	 */
-	public static function select(array $nomColonnes, string $table, array $conditions = null, string $orderBy = null, string $limit = null, bool $api = false, bool $debug = false)
+	public static function select(array $nomColonnes, string $table, array $conditions = null, string $orderBy = null, string $limit = null, bool $api = false, bool $debug = false, bool $noObj = false)
 	{
-		var_dump($nomColonnes);
+		// if (is_null($nomColonnes)) {
+		// 	# code...
+		// }
+		// var_dump($nomColonnes);
 		$db = DbConnect::getDb();
 		// var_dump($db);
 		// if (is_null($nomColonnes)) {
@@ -167,11 +217,15 @@ class DAO
 			if (!$q) return false;
 			while ($donnees = $q->fetch(PDO::FETCH_ASSOC)) { // on récupère les enregistrements de la BDD
 				if ($donnees != false) {
+					if ($noObj) {
+						return $donnees;
+					}
 					if ($api) { // On vérifie si api est a true, on renvoie un string sinon des objets liés a à la table donnée en paramètres.
 						$liste[] = $donnees;
 					} else {
 						$liste[] = new $table($donnees);
 					}
+					
 				}
 			}
 
@@ -259,7 +313,9 @@ class DAO
 		
     }
 	$query = substr($query,0,-2);
-	$query .= '))';
+	$query .= '))ENGINE=InnoDB;';
+	var_dump($query);
+	// $query .= '))';
 	// $query .= ')',;
 
 		// var_dump($query);
@@ -277,7 +333,7 @@ class DAO
 			
 			
 		// }
-		var_dump($query);
+		// var_dump($query);
 
 	// var_dump($query);
     return $db->exec($query);
@@ -298,11 +354,32 @@ public static function getInfo($obj)
 	$q->execute();
 	return $q->fetchAll(PDO::FETCH_ASSOC);
 }
+public static function getPrimaryKeys($tables, $dbName)
+{
+    $db = DbConnect::getDb();
+    $primaryKeys = array();
+    foreach ($tables as $table) {
+        $tableName = $table['Tables_in_' . $dbName];
+        $sql = "SHOW KEYS FROM " . $tableName . " WHERE Key_name = 'PRIMARY'";
+        $q = $db->prepare($sql);
+        $q->execute();
+        $keys = $q->fetchAll(PDO::FETCH_COLUMN, 4);
+        $primaryKeys[$tableName] = $keys;
+    }
+
+    return $primaryKeys;
+}
+
+
+
+
+
 public static function selectAll($tableName) {
 	$db = DbConnect::getDb();
   
 	// Build the SQL query
 	$query = "SELECT * FROM $tableName";
+	// var_dump($query);
   
 	// Execute the query
 	$result = $db->query($query);
@@ -323,9 +400,15 @@ public static function selectAll($tableName) {
 	// Create an array of objects representing the rows
 	$objects = [];
 	foreach ($rows as $row) {
-		var_dump($row);
-	  $object = new Tables($row);
-	  $objects[] = $object;
+		$newRow = array();
+		foreach ($row as $key => $value) {
+			if (strpos($key, '_') === 0) {
+				$key = substr($key, 1);
+			}
+			$newRow[$key] = $value;
+		}
+		$object = new Tables($newRow);
+		$objects[] = $object;
 	}
   
 	return $objects;
